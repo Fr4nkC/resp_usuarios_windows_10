@@ -39,7 +39,7 @@ function rev_carp_respaldar{
     #
     # // Mostrar en Menú las carpetas de usuarios a respaldar y las sub-carpetas
     #
-     
+
      $carp_usuarios = Get-ChildItem -Path $directorio_inicial | ForEach-Object {$_.Name} 
 
         Write-Host ""
@@ -63,6 +63,27 @@ function rev_carp_respaldar{
                 }
                     Write-Host "     └───|" -ForegroundColor DarkGray
         }
+
+    #
+    # // Guardar en integrity el historico.
+    #
+
+     New-Item -Path .\integrity\ -Name "$ID.txt" -ItemType "file"
+     $carp_usuarios = Get-ChildItem -Path $directorio_inicial | ForEach-Object {$_.Name} 
+
+        Write-Output $ID >> .\integrity\$ID.txt
+        Foreach($elemento in $carp_usuarios){
+        Write-Output "--$elemento" >>.\integrity\$ID.txt
+                $sub_carpetas_usuario = Get-ChildItem "$directorio_inicial\$elemento" | ForEach-Object {$_.Name}
+                Foreach($element in $sub_carpetas_usuario){
+                    if($omitir -contains $element ){
+                    }else{
+                    Write-Output "-$element" >>.\integrity\$ID.txt
+                    }
+                }
+                    
         
 
+        }
+        Write-Output $ID >> .\integrity\$ID.txt
 }
